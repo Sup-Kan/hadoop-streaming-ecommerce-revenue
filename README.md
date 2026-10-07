@@ -6,8 +6,6 @@ Bài thực hành Hadoop Streaming: phân tích đơn hàng thương mại đi�
 
 **Kết quả chính:** nhóm **Electronics** dẫn đầu với **3.703.769.311** (76,94% tổng doanh thu SUCCESS). Top 3 gồm Electronics, Home, Fashion và chiếm 90,0% tổng doanh thu.
 
-**Tác giả:** `Phạm Đại Nghĩa` — `A47179` (điền hoặc xóa trước khi đăng công khai)
-
 ---
 
 ## 1. Bài toán
@@ -53,12 +51,12 @@ flowchart LR
 
 Ví dụ nhỏ: ba cặp `Book 100`, `Book 250`, `Toy 80` sau shuffle thành `Book → [100, 250]` và `Toy → [80]`; reducer cho `Book 350` và `Toy 80`.
 
-**Vị trí trên HDFS** (thay `A47179` bằng tên thư mục người dùng của bạn):
+**Vị trí trên HDFS** (thay `...` bằng tên thư mục người dùng của bạn):
 
 | Mục | Đường dẫn |
 |---|---|
-| Dữ liệu vào | `/user/A47179/orders/orders_2026_09.csv` |
-| Thư mục kết quả | `/user/A47179/output/revenue_by_category/` |
+| Dữ liệu vào | `/user/.../orders/orders_2026_09.csv` |
+| Thư mục kết quả | `/user/.../output/revenue_by_category/` |
 | File kết quả | `part-00000` (cùng file cờ `_SUCCESS`) |
 
 Thư mục `-output` phải **chưa tồn tại** trước khi chạy job.
@@ -87,23 +85,23 @@ cat data/orders_2026_09.csv | src/mapper_revenue.py | sort -k1,1 | src/reducer_r
 **Trên Hadoop:**
 
 ```bash
-hadoop fs -mkdir -p /user/A47179/orders
-hadoop fs -put -f data/orders_2026_09.csv /user/A47179/orders/
-hadoop fs -ls -h /user/A47179/orders
-hadoop fs -head /user/A47179/orders/orders_2026_09.csv
+hadoop fs -mkdir -p /user/.../orders
+hadoop fs -put -f data/orders_2026_09.csv /user/.../orders/
+hadoop fs -ls -h /user/.../orders
+hadoop fs -head /user/.../orders/orders_2026_09.csv
 
-hadoop fs -rm -r -f /user/A47179/output/revenue_by_category
+hadoop fs -rm -r -f /user/.../output/revenue_by_category
 hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
   -D mapreduce.input.fileinputformat.split.minsize=134217728 \
   -files src/mapper_revenue.py,src/reducer_revenue.py \
   -mapper mapper_revenue.py \
   -reducer reducer_revenue.py \
-  -input  /user/A47179/orders/orders_2026_09.csv \
-  -output /user/A47179/output/revenue_by_category
+  -input  /user/.../orders/orders_2026_09.csv \
+  -output /user/.../output/revenue_by_category
 
-hadoop fs -ls /user/A47179/output/revenue_by_category
-hadoop fs -cat /user/A47179/output/revenue_by_category/part-00000
-hadoop fs -cat /user/A47179/output/revenue_by_category/part-00000 | sort -k2,2nr | head -3
+hadoop fs -ls /user/.../output/revenue_by_category
+hadoop fs -cat /user/.../output/revenue_by_category/part-00000
+hadoop fs -cat /user/.../output/revenue_by_category/part-00000 | sort -k2,2nr | head -3
 yarn application -list -appStates ALL
 ```
 
@@ -229,4 +227,4 @@ hadoop-streaming-ecommerce-revenue/
 ## 11. Lưu ý
 
 - Dữ liệu và đề bài thuộc bài thực hành của môn học; hãy kiểm tra giảng viên có cho phép công khai không trước khi đặt repo ở chế độ public.
-- Tên người dùng HDFS trong log thật có thể chứa mã số sinh viên; nếu đăng công khai, hãy thay bằng `A47179` như trong tài liệu này.
+- Tên người dùng HDFS trong log thật có thể chứa mã số sinh viên; nếu đăng công khai, hãy thay bằng `...` như trong tài liệu này.
